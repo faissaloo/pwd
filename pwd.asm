@@ -10,13 +10,13 @@ section .bss
 section .text
 _start:
 	pop ecx ;Arg count
-	add esp, 4 ;remove program name from stack
+	add esp, 4
 	dec ecx
 	jz _mode_l ;No arguments? Then default
-	_arg_loop:
-		pop edi
-		dec ecx
-		jnz _arg_loop ;Only the last argument should be counted, ignore invalids
+	;Skip all but the last argument (including program name)
+	lea esp, [esp-4+ecx*4]
+	;pop the last argument
+	pop edi
 	mov eax, [edi]
 	bswap eax
 	xor al,al ;Remove last character
@@ -59,8 +59,8 @@ _print_result:
 
 _exit:
 	mov eax, 1
-	xor ebx,ebx
-	;We've already mov'd esp into ebp, no need to do it again
+	xor ebx, ebx
+	mov ebp, esp
 	sysenter
 
 _mode_p:
