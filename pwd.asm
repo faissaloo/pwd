@@ -17,11 +17,8 @@ _start:
 	lea esp, [esp-4+ecx*4]
 	;pop the last argument
 	pop edi
-	mov eax, [edi]
-	bswap eax
-	xor al,al ;Remove last character
 	;time to parse
-	cmp eax, `\0\0P-`
+	cmp dword [edi-1], `\0-P\0`
 	je _mode_p
 	;Default to -L behaviour for invalid arguments or -L
 
